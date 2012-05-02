@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class OlsrInfo {
@@ -25,11 +27,11 @@ public class OlsrInfo {
 		port = setport;
 	}
 
-	public String request(String req) throws IOException {
+	public String[] request(String req) throws IOException {
 		Socket sock = null;
 		BufferedReader in = null;
 		PrintWriter out = null;
-		String output = "";
+		List<String> retlist = new ArrayList<String>();
 
 		try {
 			sock = new Socket(host, port);  
@@ -43,20 +45,21 @@ public class OlsrInfo {
 		out.println("/all");
 		String line;
 		while((line = in.readLine()) != null) {
-			output = output + line + "\n";
+			retlist.add(line);
 		}
 		// the txtinfo plugin drops the connection once it outputs
 		out.close();
 		in.close();
 		sock.close();
 
-		return output;
+		return retlist.toArray(new String[retlist.size()]);
 	}
 
 	public static void main (String[] args) throws IOException {
 		OlsrInfo txtinfo = new OlsrInfo();
 		try {
-			System.out.println(txtinfo.request("/all"));
+			for (String s : txtinfo.request("/all") )
+				System.out.println(s);
 		} catch (IOException e) {
 			System.err.println("Couldn't get I/O for socket to " + txtinfo.host + ":" + Integer.toString(txtinfo.port));
 		}
