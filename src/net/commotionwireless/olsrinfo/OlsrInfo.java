@@ -13,7 +13,17 @@ public class OlsrInfo {
 	String host = "127.0.0.1";
 	int port = 2006;
 
-	// TODO make constructor to set ip and ip/port
+	public OlsrInfo() {
+	}
+
+	public OlsrInfo(String sethost) {
+		host = sethost;
+	}
+
+	public OlsrInfo(String sethost, int setport) {
+		host = sethost;
+		port = setport;
+	}
 
 	public String request(String req) throws IOException {
 		Socket sock = null;
