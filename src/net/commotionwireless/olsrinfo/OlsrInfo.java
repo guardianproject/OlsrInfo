@@ -42,7 +42,7 @@ public class OlsrInfo {
 		} catch (IOException e) {
 			System.err.println("Couldn't get I/O for socket to " + host + ":" + Integer.toString(port));
 		}
-		out.println("/all");
+		out.println(req);
 		String line;
 		while((line = in.readLine()) != null) {
 			retlist.add(line);
@@ -55,6 +55,27 @@ public class OlsrInfo {
 		return retlist.toArray(new String[retlist.size()]);
 	}
 
+	public String[] routes() {
+		String [] data = null;
+		int startpos = 0;
+
+		try {
+			data = request("/route");
+		} catch (IOException e) {
+			System.err.println("Couldn't get I/O for socket to " + host + ":" + Integer.toString(port));
+		}
+		for(int i = 0; i < data.length; i++) {
+			if(data[i].startsWith("Table: Routes")) {
+				startpos = i + 2;
+				break;
+			}
+		}
+		String[] ret = new String[data.length - startpos];
+		for (int i = 0; i < ret.length; i++)
+			ret[i] = data[i + startpos];
+		return ret;
+	}
+
 	public static void main (String[] args) throws IOException {
 		OlsrInfo txtinfo = new OlsrInfo();
 		try {
@@ -63,5 +84,8 @@ public class OlsrInfo {
 		} catch (IOException e) {
 			System.err.println("Couldn't get I/O for socket to " + txtinfo.host + ":" + Integer.toString(txtinfo.port));
 		}
+		System.out.println("ROUTES----------");
+		for(String s : txtinfo.routes())
+			System.out.println(s);
 	}
 }
