@@ -13,6 +13,10 @@ import java.util.List;
 import java.util.Set;
 
 
+/**
+ * @author Hans-Christoph Steiner
+ *
+ */
 public class OlsrInfo {
 
 	String host = "127.0.0.1";
@@ -93,36 +97,57 @@ public class OlsrInfo {
 		return ret;
 	}
 
-	// IP address, SYM, MPR, MPRS, Willingness, 2 Hop Neighbors
+	/**
+	 * 2-hop neighbors on the mesh
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
+	 */
 	public String[][] neighbors() {
 		return command("/neigh");
 	}
 
-	// Local IP, Remote IP, Hysteresis, LQ, NLQ, Cost
+	/**
+	 * direct connections on the mesh, i.e. nodes with direct IP connectivity via Ad-hoc
+	 * @return array of per-IP arrays of Local IP, Remote IP, Hysteresis, LQ, NLQ, and Cost
+	 */
 	public String[][] links() {
 		return command("/link");
 	}
 
-	// Destination, Gateway IP, Metric, ETX, Interface
+	/**
+	 * IP routes to nodes on the mesh
+	 * @return array of per-IP arrays of Destination, Gateway IP, Metric, ETX, and Interface
+	 */
 	public String[][] routes() {
 		return command("/route");
 	}
 
-	// Destination, Gateway
+	/**
+	 * Host and Network Association (for supporting dynamic internet gateways)
+	 * @return array of per-IP arrays of Destination and Gateway
+	 */
 	public String[][] hna() {
 		return command("/hna");
 	}
 
-	// IP address, Aliases
+	/**
+	 * Multiple Interface Declaration
+	 * @return array of per-IP arrays of IP address and Aliases
+	 */
 	public String[][] mid() {
 		return command("/mid");
 	}
 
-	// Destination IP, Last hop IP, LQ, NLQ, Cost
+	/**
+	 * topology of the whole mesh
+	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ, and Cost
+	 */
 	public String[][] topology() {
 		return command("/topo");
 	}
 
+	/**
+	 * for testing from the command line
+	 */
 	public static void main(String[] args) throws IOException {
 		OlsrInfo txtinfo = new OlsrInfo();
 		System.out.println("NEIGHBORS----------");
