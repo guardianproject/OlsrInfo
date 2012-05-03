@@ -7,7 +7,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class OlsrInfo {
@@ -55,17 +58,30 @@ public class OlsrInfo {
 		return retlist.toArray(new String[retlist.size()]);
 	}
 
-	public String[] routes() {
+	public String[] command(String cmd) {
 		String [] data = null;
 		int startpos = 0;
 
+		final Set<String> supportedCommands = new HashSet<String>(Arrays.asList(
+				new String[] {
+						"/neigh",
+						"/link",
+						"/route",
+						"/hna",
+						"/mid",
+						"/topo",
+				}
+		));
+		if(! supportedCommands.contains(cmd))
+			System.out.println("Unsupported command: " + cmd);
+
 		try {
-			data = request("/route");
+			data = request(cmd);
 		} catch (IOException e) {
 			System.err.println("Couldn't get I/O for socket to " + host + ":" + Integer.toString(port));
 		}
 		for(int i = 0; i < data.length; i++) {
-			if(data[i].startsWith("Table: Routes")) {
+			if(data[i].startsWith("Table: ")) {
 				startpos = i + 2;
 				break;
 			}
@@ -76,16 +92,55 @@ public class OlsrInfo {
 		return ret;
 	}
 
-	public static void main (String[] args) throws IOException {
+	// IP address, SYM, MPR, MPRS, Willingness, 2 Hop Neighbors
+	public String[] neighbors() {
+		return command("/neigh");
+	}
+
+	// Local IP, Remote IP, Hysteresis, LQ, NLQ, Cost
+	public String[] links() {
+		return command("/link");
+	}
+
+	// Destination, Gateway IP, Metric, ETX, Interface
+	public String[] routes() {
+		return command("/route");
+	}
+
+	// Destination, Gateway
+	public String[] hna() {
+		return command("/hna");
+	}
+
+	// IP address, Aliases
+	public String[] mid() {
+		return command("/mid");
+	}
+
+	// Destination IP, Last hop IP, LQ, NLQ, Cost
+	public String[] topography() {
+		return command("/topo");
+	}
+
+	public static void main(String[] args) throws IOException {
 		OlsrInfo txtinfo = new OlsrInfo();
-		try {
-			for (String s : txtinfo.request("/all") )
-				System.out.println(s);
-		} catch (IOException e) {
-			System.err.println("Couldn't get I/O for socket to " + txtinfo.host + ":" + Integer.toString(txtinfo.port));
-		}
+		System.out.println("NEIGHBORS----------");
+		for(String s : txtinfo.neighbors())
+			System.out.println(s);
+		System.out.println("LINKS----------");
+		for(String s : txtinfo.links())
+			System.out.println(s);
 		System.out.println("ROUTES----------");
 		for(String s : txtinfo.routes())
+			System.out.println(s);
+		System.out.println("HNA----------");
+		for(String s : txtinfo.hna())
+			System.out.println(s);
+		System.out.println("MID----------");
+		for(String s : txtinfo.mid())
+			System.out.println(s);
+		System.out.println("TOPOGRAPHY----------");
+		for(String s : txtinfo.topography())
 			System.out.println(s);
 	}
 }
