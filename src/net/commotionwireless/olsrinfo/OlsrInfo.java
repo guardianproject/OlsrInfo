@@ -58,8 +58,8 @@ public class OlsrInfo {
 		return retlist.toArray(new String[retlist.size()]);
 	}
 
-	public String[] command(String cmd) {
-		String [] data = null;
+	public String[][] command(String cmd) {
+		String[] data = null;
 		int startpos = 0;
 
 		final Set<String> supportedCommands = new HashSet<String>(Arrays.asList(
@@ -86,61 +86,80 @@ public class OlsrInfo {
 				break;
 			}
 		}
-		String[] ret = new String[data.length - startpos];
+		int fields = data[startpos + 1].split("\t").length;
+		String[][] ret = new String[data.length - startpos][fields];
 		for (int i = 0; i < ret.length; i++)
-			ret[i] = data[i + startpos];
+			ret[i] = data[i + startpos].split("\t");
 		return ret;
 	}
 
 	// IP address, SYM, MPR, MPRS, Willingness, 2 Hop Neighbors
-	public String[] neighbors() {
+	public String[][] neighbors() {
 		return command("/neigh");
 	}
 
 	// Local IP, Remote IP, Hysteresis, LQ, NLQ, Cost
-	public String[] links() {
+	public String[][] links() {
 		return command("/link");
 	}
 
 	// Destination, Gateway IP, Metric, ETX, Interface
-	public String[] routes() {
+	public String[][] routes() {
 		return command("/route");
 	}
 
 	// Destination, Gateway
-	public String[] hna() {
+	public String[][] hna() {
 		return command("/hna");
 	}
 
 	// IP address, Aliases
-	public String[] mid() {
+	public String[][] mid() {
 		return command("/mid");
 	}
 
 	// Destination IP, Last hop IP, LQ, NLQ, Cost
-	public String[] topography() {
+	public String[][] topography() {
 		return command("/topo");
 	}
 
 	public static void main(String[] args) throws IOException {
 		OlsrInfo txtinfo = new OlsrInfo();
 		System.out.println("NEIGHBORS----------");
-		for(String s : txtinfo.neighbors())
-			System.out.println(s);
+		for(String[] s : txtinfo.neighbors()) {
+			for(String t : s)
+				System.out.print(t + ",");
+			System.out.println();
+		}
 		System.out.println("LINKS----------");
-		for(String s : txtinfo.links())
-			System.out.println(s);
+		for(String[] s : txtinfo.links()) {
+			for(String t : s)
+				System.out.print(t + ",");
+			System.out.println();
+		}
 		System.out.println("ROUTES----------");
-		for(String s : txtinfo.routes())
-			System.out.println(s);
+		for(String[] s : txtinfo.routes()) {
+			for(String t : s)
+				System.out.print(t + ",");
+			System.out.println();
+		}
 		System.out.println("HNA----------");
-		for(String s : txtinfo.hna())
-			System.out.println(s);
+		for(String[] s : txtinfo.hna()) {
+			for(String t : s)
+				System.out.print(t + ",");
+			System.out.println();
+		}
 		System.out.println("MID----------");
-		for(String s : txtinfo.mid())
-			System.out.println(s);
+		for(String[] s : txtinfo.mid()) {
+			for(String t : s)
+				System.out.print(t + ",");
+			System.out.println();
+		}
 		System.out.println("TOPOGRAPHY----------");
-		for(String s : txtinfo.topography())
-			System.out.println(s);
+		for(String[] s : txtinfo.topography()) {
+			for(String t : s)
+				System.out.print(t + ",");
+			System.out.println();
+		}
 	}
 }
