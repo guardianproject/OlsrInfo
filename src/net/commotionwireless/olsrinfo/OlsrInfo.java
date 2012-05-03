@@ -65,7 +65,6 @@ public class OlsrInfo {
 
 	public String[][] command(String cmd) {
 		String[] data = null;
-		int startpos = 0;
 
 		final Set<String> supportedCommands = new HashSet<String>(Arrays.asList(
 				new String[] {
@@ -85,12 +84,15 @@ public class OlsrInfo {
 		} catch (IOException e) {
 			System.err.println("Couldn't get I/O for socket to " + host + ":" + Integer.toString(port));
 		}
+		int startpos = -1;
 		for(int i = 0; i < data.length; i++) {
 			if(data[i].startsWith("Table: ")) {
 				startpos = i + 2;
 				break;
 			}
 		}
+		if(startpos >= data.length || startpos == -1)
+			return new String[0][0];
 		int fields = data[startpos + 1].split("\t").length;
 		String[][] ret = new String[data.length - startpos][fields];
 		for (int i = 0; i < ret.length; i++)
