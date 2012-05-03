@@ -52,7 +52,8 @@ public class OlsrInfo {
 		out.println(req);
 		String line;
 		while((line = in.readLine()) != null) {
-			retlist.add(line);
+			if(! line.equals(""))
+				retlist.add(line);
 		}
 		// the txtinfo plugin drops the connection once it outputs
 		out.close();
