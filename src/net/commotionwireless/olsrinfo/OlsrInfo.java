@@ -119,7 +119,7 @@ public class OlsrInfo {
 	}
 
 	// Destination IP, Last hop IP, LQ, NLQ, Cost
-	public String[][] topography() {
+	public String[][] topology() {
 		return command("/topo");
 	}
 
@@ -155,8 +155,8 @@ public class OlsrInfo {
 				System.out.print(t + ",");
 			System.out.println();
 		}
-		System.out.println("TOPOGRAPHY----------");
-		for(String[] s : txtinfo.topography()) {
+		System.out.println("TOPOLOGY----------");
+		for(String[] s : txtinfo.topology()) {
 			for(String t : s)
 				System.out.print(t + ",");
 			System.out.println();
