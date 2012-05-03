@@ -68,15 +68,15 @@ public class OlsrInfo {
 
 		final Set<String> supportedCommands = new HashSet<String>(Arrays.asList(
 				new String[] {
-						"/config",
-						"/gateway",
-						"/hna",
-						"/interface",
-						"/link",
-						"/mid",
-						"/neigh",
-						"/route",
-						"/topo",
+						"/con", // conf file
+						"/gat", // gateways
+						"/hna", // Host and Network Association
+						"/int", // network interfaces
+						"/lin", // links
+						"/mid", // MID
+						"/nei", // neighbors
+						"/rou", // routes
+						"/top", // topology
 				}
 		));
 		if(! supportedCommands.contains(cmd))
@@ -108,7 +108,7 @@ public class OlsrInfo {
 	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
 	 */
 	public String[][] neighbors() {
-		return command("/neigh");
+		return command("/nei");
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class OlsrInfo {
 	 * @return array of per-IP arrays of Local IP, Remote IP, Hysteresis, LQ, NLQ, and Cost
 	 */
 	public String[][] links() {
-		return command("/link");
+		return command("/lin");
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class OlsrInfo {
 	 * @return array of per-IP arrays of Destination, Gateway IP, Metric, ETX, and Interface
 	 */
 	public String[][] routes() {
-		return command("/route");
+		return command("/rou");
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class OlsrInfo {
 	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ, and Cost
 	 */
 	public String[][] topology() {
-		return command("/topo");
+		return command("/top");
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class OlsrInfo {
 	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ, and Cost
 	 */
 	public String[][] interfaces() {
-		return command("/interface");
+		return command("/int");
 	}
 
 	/**
@@ -164,7 +164,7 @@ public class OlsrInfo {
 	 * @return array of per-IP arrays of Status, Gateway IP, ETX, Hopcount, Uplink, Downlink, IPv4, IPv6, Prefix
 	 */
 	public String[][] gateways() {
-		return command("/gateway");
+		return command("/gat");
 	}
 
 	/**
