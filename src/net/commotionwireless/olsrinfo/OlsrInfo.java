@@ -68,11 +68,14 @@ public class OlsrInfo {
 
 		final Set<String> supportedCommands = new HashSet<String>(Arrays.asList(
 				new String[] {
-						"/neigh",
-						"/link",
-						"/route",
+						"/config",
+						"/gateway",
 						"/hna",
+						"/interface",
+						"/link",
 						"/mid",
+						"/neigh",
+						"/route",
 						"/topo",
 				}
 		));
@@ -149,6 +152,22 @@ public class OlsrInfo {
 	}
 
 	/**
+	 * the network interfaces that olsrd is aware of
+	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ, and Cost
+	 */
+	public String[][] interfaces() {
+		return command("/interface");
+	}
+
+	/**
+	 * the gateways to other networks that this node knows about
+	 * @return array of per-IP arrays of Status, Gateway IP, ETX, Hopcount, Uplink, Downlink, IPv4, IPv6, Prefix
+	 */
+	public String[][] gateways() {
+		return command("/gateway");
+	}
+
+	/**
 	 * for testing from the command line
 	 */
 	public static void main(String[] args) throws IOException {
@@ -185,6 +204,18 @@ public class OlsrInfo {
 		}
 		System.out.println("TOPOLOGY----------");
 		for(String[] s : txtinfo.topology()) {
+			for(String t : s)
+				System.out.print(t + ",");
+			System.out.println();
+		}
+		System.out.println("INTERFACES----------");
+		for(String[] s : txtinfo.interfaces()) {
+			for(String t : s)
+				System.out.print(t + ",");
+			System.out.println();
+		}
+		System.out.println("GATEWAYS----------");
+		for(String[] s : txtinfo.gateways()) {
 			for(String t : s)
 				System.out.print(t + ",");
 			System.out.println();
