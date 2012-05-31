@@ -17,19 +17,19 @@ import java.util.Set;
  * @author Hans-Christoph Steiner
  *
  */
-public class OlsrInfo {
+public class TxtInfo {
 
 	String host = "127.0.0.1";
 	int port = 2006;
 
-	public OlsrInfo() {
+	public TxtInfo() {
 	}
 
-	public OlsrInfo(String sethost) {
+	public TxtInfo(String sethost) {
 		host = sethost;
 	}
 
-	public OlsrInfo(String sethost, int setport) {
+	public TxtInfo(String sethost, int setport) {
 		host = sethost;
 		port = setport;
 	}
@@ -68,6 +68,7 @@ public class OlsrInfo {
 
 		final Set<String> supportedCommands = new HashSet<String>(Arrays.asList(
 				new String[] {
+						"/2ho", // two-hop neighbors
 						"/con", // conf file
 						"/gat", // gateways
 						"/hna", // Host and Network Association
@@ -105,6 +106,14 @@ public class OlsrInfo {
 
 	/**
 	 * 2-hop neighbors on the mesh
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
+	 */
+	public String[][] twohop() {
+		return command("/2ho");
+	}
+
+	/**
+	 * immediate neighbors on the mesh
 	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
 	 */
 	public String[][] neighbors() {
@@ -171,7 +180,7 @@ public class OlsrInfo {
 	 * for testing from the command line
 	 */
 	public static void main(String[] args) throws IOException {
-		OlsrInfo txtinfo = new OlsrInfo();
+		TxtInfo txtinfo = new TxtInfo();
 		System.out.println("NEIGHBORS----------");
 		for(String[] s : txtinfo.neighbors()) {
 			for(String t : s)
