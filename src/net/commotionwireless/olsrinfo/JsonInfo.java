@@ -227,6 +227,13 @@ public class JsonInfo {
 	}
 
 	/**
+	 * The parsed configuration of plugins in their current state
+	 */
+	public String plugins() {
+		return command("/plugins");
+	}
+
+	/**
 	 * The current olsrd configuration in the olsrd.conf format, NOT json
 	 */
 	public String olsrdconf() {
