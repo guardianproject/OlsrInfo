@@ -1,5 +1,8 @@
 package net.commotionwireless.olsrinfo.datatypes;
 
-public class MID {
+import java.util.Collection;
 
+public class MID {
+	public String ipAddress;
+	public Collection<MIDAlias> aliases;
 }

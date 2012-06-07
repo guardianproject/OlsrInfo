@@ -1,7 +1,6 @@
 package net.commotionwireless.olsrinfo;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -14,8 +13,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.commotionwireless.olsrinfo.datatypes.Gateway;
+import net.commotionwireless.olsrinfo.datatypes.HNA;
 import net.commotionwireless.olsrinfo.datatypes.Interface;
+import net.commotionwireless.olsrinfo.datatypes.Link;
+import net.commotionwireless.olsrinfo.datatypes.MID;
+import net.commotionwireless.olsrinfo.datatypes.Neighbor;
+import net.commotionwireless.olsrinfo.datatypes.Node;
 import net.commotionwireless.olsrinfo.datatypes.OlsrDataDump;
+import net.commotionwireless.olsrinfo.datatypes.Plugin;
+import net.commotionwireless.olsrinfo.datatypes.Route;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -245,13 +252,34 @@ public class JsonInfo {
 	 */
 	public static void main(String[] args) throws IOException {
 		JsonInfo jsoninfo = new JsonInfo();
-		//System.out.println("ALL----------");
-		//System.out.println(jsoninfo.interfaces());
-		// System.out.println("OLSRD.CONF----------");
-		// System.out.println(jsoninfo.olsrdconf());
 		ObjectMapper mapper = new ObjectMapper();
-		//OlsrDataDump dump = mapper.readValue(new File("all.json"), OlsrDataDump.class);
-		OlsrDataDump dump = mapper.readValue(jsoninfo.config(), OlsrDataDump.class);
-		System.out.println(dump);
+		OlsrDataDump dump = mapper.readValue(jsoninfo.all(), OlsrDataDump.class);
+		System.out.println("gateways:");
+		for (Gateway g : dump.gateways)
+			System.out.println("\t" + g.ipAddress);
+		System.out.println("hna:");
+		for (HNA h : dump.hna)
+			System.out.println("\t" + h.destination);
+		System.out.println("Interfaces:");
+		for (Interface i : dump.interfaces)
+			System.out.println("\t" + i.name);
+		System.out.println("Links:");
+		for (Link l : dump.links)
+			System.out.println("\t" + l.localIP + " <--> " + l.remoteIP);
+		System.out.println("MID:");
+		for (MID m : dump.mid)
+			System.out.println("\t" + m.ipAddress);
+		System.out.println("Neighbors:");
+		for (Neighbor n : dump.neighbors)
+			System.out.println("\t" + n.ipv4Address);
+		System.out.println("Plugins:");
+		for (Plugin p : dump.plugins)
+			System.out.println("\t" + p.plugin);
+		System.out.println("Routes:");
+		for (Route r : dump.routes)
+			System.out.println("\t" + r.localIP);
+		System.out.println("Topology:");
+		for (Node node : dump.topology)
+			System.out.println("\t" + node.destinationIP);
 	}
 }

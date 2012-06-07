@@ -3,6 +3,13 @@ package net.commotionwireless.olsrinfo.datatypes;
 public class Interface {
 	public String name;
 	public String state;
+	public int olsrMTU;
+	public boolean wireless;
+	public String ipv4Address;
+	public String netmask;
+	public String broadcast;
+	public String ipv6Address;
+	public String multicast;
 	public int addressLength;
 	public int carrier;
 	public int dormant;
