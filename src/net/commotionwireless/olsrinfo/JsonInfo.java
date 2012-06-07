@@ -1,6 +1,7 @@
 package net.commotionwireless.olsrinfo;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -8,10 +9,17 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.commotionwireless.olsrinfo.datatypes.Interface;
+import net.commotionwireless.olsrinfo.datatypes.OlsrDataDump;
+
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * @author Hans-Christoph Steiner
@@ -82,15 +90,18 @@ public class JsonInfo {
 						"/neighbors", // neighbors
 						"/routes", // routes
 						"/topology", // mesh network topology
-						"/runtime", // all of the runtime info in a single report
-						// the following don't change during runtime, so they are separate
+						"/runtime", // all of the runtime info in a single
+									// report
+						// the following don't change during runtime, so they
+						// are separate
 						"/config", // the current running config info
 						"/plugins", // loaded plugins and their config
-						// the only non-JSON output, and can't be combined with the others
-						"/olsrd.conf", // current config info in olsrd.conf file format
-				}
-		));
-		if(! supportedCommands.contains(cmd))
+						// the only non-JSON output, and can't be combined with
+						// the others
+						"/olsrd.conf", // current config info in olsrd.conf file
+										// format
+				}));
+		if (!supportedCommands.contains(cmd))
 			System.out.println("Unsupported command: " + cmd);
 
 		try {
@@ -180,8 +191,24 @@ public class JsonInfo {
 	 * the network interfaces that olsrd is aware of
 	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ, and Cost
 	 */
-	public String interfaces() {
-		return command("/interfaces");
+	public Collection<Interface> interfaces() {
+		String data = command("/interfaces");
+		//System.out.println(data);
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			OlsrDataDump dump = mapper.readValue(data, OlsrDataDump.class);
+			return dump.interfaces;
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -193,8 +220,14 @@ public class JsonInfo {
 	}
 
 	/**
-	 * the gateways to other networks that this node knows about
-	 * @return array of per-IP arrays of Status, Gateway IP, ETX, Hopcount, Uplink, Downlink, IPv4, IPv6, Prefix
+	 * The parsed configuration of olsrd in its current state
+	 */
+	public String config() {
+		return command("/config");
+	}
+
+	/**
+	 * The current olsrd configuration in the olsrd.conf format, NOT json
 	 */
 	public String olsrdconf() {
 		return command("/olsrd.conf");
@@ -205,9 +238,13 @@ public class JsonInfo {
 	 */
 	public static void main(String[] args) throws IOException {
 		JsonInfo jsoninfo = new JsonInfo();
-		System.out.println("ALL----------");
-		System.out.println(jsoninfo.all());
-		System.out.println("OLSRD.CONF----------");
-		System.out.println(jsoninfo.olsrdconf());
+		//System.out.println("ALL----------");
+		//System.out.println(jsoninfo.interfaces());
+		// System.out.println("OLSRD.CONF----------");
+		// System.out.println(jsoninfo.olsrdconf());
+		ObjectMapper mapper = new ObjectMapper();
+		//OlsrDataDump dump = mapper.readValue(new File("all.json"), OlsrDataDump.class);
+		OlsrDataDump dump = mapper.readValue(jsoninfo.config(), OlsrDataDump.class);
+		System.out.println(dump);
 	}
 }
