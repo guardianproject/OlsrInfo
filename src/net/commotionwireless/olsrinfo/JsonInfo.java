@@ -30,7 +30,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * @author Hans-Christoph Steiner
- *
+ * 
  */
 public class JsonInfo {
 
@@ -56,18 +56,19 @@ public class JsonInfo {
 		List<String> retlist = new ArrayList<String>();
 
 		try {
-			sock = new Socket(host, port);  
+			sock = new Socket(host, port);
 			in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 			out = new PrintWriter(sock.getOutputStream(), true);
 		} catch (UnknownHostException e) {
 			throw new IOException();
 		} catch (IOException e) {
-			System.err.println("Couldn't get I/O for socket to " + host + ":" + Integer.toString(port));
+			System.err.println("Couldn't get I/O for socket to " + host + ":"
+					+ Integer.toString(port));
 		}
 		out.println(req);
 		String line;
-		while((line = in.readLine()) != null) {
-			if(! line.equals(""))
+		while ((line = in.readLine()) != null) {
+			if (!line.equals(""))
 				retlist.add(line);
 		}
 		// the jsoninfo plugin drops the connection once it outputs
@@ -82,8 +83,8 @@ public class JsonInfo {
 		String[] data = null;
 		String ret = "";
 
-		final Set<String> supportedCommands = new HashSet<String>(Arrays.asList(
-				new String[] {
+		final Set<String> supportedCommands = new HashSet<String>(
+				Arrays.asList(new String[] {
 						// combined reports
 						"/all", // all of the JSON info
 						"/runtime", // all of the runtime status reports
@@ -114,7 +115,8 @@ public class JsonInfo {
 		try {
 			data = request(cmd);
 		} catch (IOException e) {
-			System.err.println("Couldn't get I/O for socket to " + host + ":" + Integer.toString(port));
+			System.err.println("Couldn't get I/O for socket to " + host + ":"
+					+ Integer.toString(port));
 		}
 		for (String s : data) {
 			ret += s + "\n";
@@ -124,7 +126,9 @@ public class JsonInfo {
 
 	/**
 	 * all of the runtime and startup status information in a single report
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
 	 */
 	public String all() {
 		return command("/all");
@@ -132,7 +136,9 @@ public class JsonInfo {
 
 	/**
 	 * all of the runtime status information in a single report
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
 	 */
 	public String runtime() {
 		return command("/runtime");
@@ -140,7 +146,9 @@ public class JsonInfo {
 
 	/**
 	 * all of the startup config information in a single report
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
 	 */
 	public String startup() {
 		return command("/startup");
@@ -148,15 +156,20 @@ public class JsonInfo {
 
 	/**
 	 * immediate neighbors on the mesh
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
 	 */
 	public String neighbors() {
 		return command("/neighbors");
 	}
 
 	/**
-	 * direct connections on the mesh, i.e. nodes with direct IP connectivity via Ad-hoc
-	 * @return array of per-IP arrays of Local IP, Remote IP, Hysteresis, LQ, NLQ, and Cost
+	 * direct connections on the mesh, i.e. nodes with direct IP connectivity
+	 * via Ad-hoc
+	 * 
+	 * @return array of per-IP arrays of Local IP, Remote IP, Hysteresis, LQ,
+	 *         NLQ, and Cost
 	 */
 	public String links() {
 		return command("/links");
@@ -164,7 +177,9 @@ public class JsonInfo {
 
 	/**
 	 * IP routes to nodes on the mesh
-	 * @return array of per-IP arrays of Destination, Gateway IP, Metric, ETX, and Interface
+	 * 
+	 * @return array of per-IP arrays of Destination, Gateway IP, Metric, ETX,
+	 *         and Interface
 	 */
 	public String routes() {
 		return command("/routes");
@@ -172,6 +187,7 @@ public class JsonInfo {
 
 	/**
 	 * Host and Network Association (for supporting dynamic internet gateways)
+	 * 
 	 * @return array of per-IP arrays of Destination and Gateway
 	 */
 	public String hna() {
@@ -180,6 +196,7 @@ public class JsonInfo {
 
 	/**
 	 * Multiple Interface Declaration
+	 * 
 	 * @return array of per-IP arrays of IP address and Aliases
 	 */
 	public String mid() {
@@ -188,7 +205,9 @@ public class JsonInfo {
 
 	/**
 	 * topology of the whole mesh
-	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ, and Cost
+	 * 
+	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ,
+	 *         and Cost
 	 */
 	public String topology() {
 		return command("/topology");
@@ -196,11 +215,13 @@ public class JsonInfo {
 
 	/**
 	 * the network interfaces that olsrd is aware of
-	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ, and Cost
+	 * 
+	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ,
+	 *         and Cost
 	 */
 	public Collection<Interface> interfaces() {
 		String data = command("/interfaces");
-		//System.out.println(data);
+		// System.out.println(data);
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			OlsrDataDump dump = mapper.readValue(data, OlsrDataDump.class);
@@ -220,7 +241,9 @@ public class JsonInfo {
 
 	/**
 	 * the gateways to other networks that this node knows about
-	 * @return array of per-IP arrays of Status, Gateway IP, ETX, Hopcount, Uplink, Downlink, IPv4, IPv6, Prefix
+	 * 
+	 * @return array of per-IP arrays of Status, Gateway IP, ETX, Hopcount,
+	 *         Uplink, Downlink, IPv4, IPv6, Prefix
 	 */
 	public String gateways() {
 		return command("/gateways");

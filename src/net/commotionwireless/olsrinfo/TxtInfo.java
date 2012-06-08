@@ -12,10 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
 /**
  * @author Hans-Christoph Steiner
- *
+ * 
  */
 public class TxtInfo {
 
@@ -41,18 +40,19 @@ public class TxtInfo {
 		List<String> retlist = new ArrayList<String>();
 
 		try {
-			sock = new Socket(host, port);  
+			sock = new Socket(host, port);
 			in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 			out = new PrintWriter(sock.getOutputStream(), true);
 		} catch (UnknownHostException e) {
 			throw new IOException();
 		} catch (IOException e) {
-			System.err.println("Couldn't get I/O for socket to " + host + ":" + Integer.toString(port));
+			System.err.println("Couldn't get I/O for socket to " + host + ":"
+					+ Integer.toString(port));
 		}
 		out.println(req);
 		String line;
-		while((line = in.readLine()) != null) {
-			if(! line.equals(""))
+		while ((line = in.readLine()) != null) {
+			if (!line.equals(""))
 				retlist.add(line);
 		}
 		// the txtinfo plugin drops the connection once it outputs
@@ -66,9 +66,8 @@ public class TxtInfo {
 	public String[][] command(String cmd) {
 		String[] data = null;
 
-		final Set<String> supportedCommands = new HashSet<String>(Arrays.asList(
-				new String[] {
-						"/2ho", // two-hop neighbors
+		final Set<String> supportedCommands = new HashSet<String>(
+				Arrays.asList(new String[] { "/2ho", // two-hop neighbors
 						"/con", // conf file
 						"/gat", // gateways
 						"/hna", // Host and Network Association
@@ -78,24 +77,24 @@ public class TxtInfo {
 						"/nei", // neighbors
 						"/rou", // routes
 						"/top", // topology
-				}
-		));
-		if(! supportedCommands.contains(cmd))
+				}));
+		if (!supportedCommands.contains(cmd))
 			System.out.println("Unsupported command: " + cmd);
 
 		try {
 			data = request(cmd);
 		} catch (IOException e) {
-			System.err.println("Couldn't get I/O for socket to " + host + ":" + Integer.toString(port));
+			System.err.println("Couldn't get I/O for socket to " + host + ":"
+					+ Integer.toString(port));
 		}
 		int startpos = -1;
-		for(int i = 0; i < data.length; i++) {
-			if(data[i].startsWith("Table: ")) {
+		for (int i = 0; i < data.length; i++) {
+			if (data[i].startsWith("Table: ")) {
 				startpos = i + 2;
 				break;
 			}
 		}
-		if(startpos >= data.length || startpos == -1)
+		if (startpos >= data.length || startpos == -1)
 			return new String[0][0];
 		int fields = data[startpos + 1].split("\t").length;
 		String[][] ret = new String[data.length - startpos][fields];
@@ -106,7 +105,9 @@ public class TxtInfo {
 
 	/**
 	 * 2-hop neighbors on the mesh
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
 	 */
 	public String[][] twohop() {
 		return command("/2ho");
@@ -114,15 +115,20 @@ public class TxtInfo {
 
 	/**
 	 * immediate neighbors on the mesh
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS, Willingness, and 2 Hop Neighbors
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
 	 */
 	public String[][] neighbors() {
 		return command("/nei");
 	}
 
 	/**
-	 * direct connections on the mesh, i.e. nodes with direct IP connectivity via Ad-hoc
-	 * @return array of per-IP arrays of Local IP, Remote IP, Hysteresis, LQ, NLQ, and Cost
+	 * direct connections on the mesh, i.e. nodes with direct IP connectivity
+	 * via Ad-hoc
+	 * 
+	 * @return array of per-IP arrays of Local IP, Remote IP, Hysteresis, LQ,
+	 *         NLQ, and Cost
 	 */
 	public String[][] links() {
 		return command("/lin");
@@ -130,7 +136,9 @@ public class TxtInfo {
 
 	/**
 	 * IP routes to nodes on the mesh
-	 * @return array of per-IP arrays of Destination, Gateway IP, Metric, ETX, and Interface
+	 * 
+	 * @return array of per-IP arrays of Destination, Gateway IP, Metric, ETX,
+	 *         and Interface
 	 */
 	public String[][] routes() {
 		return command("/rou");
@@ -138,6 +146,7 @@ public class TxtInfo {
 
 	/**
 	 * Host and Network Association (for supporting dynamic internet gateways)
+	 * 
 	 * @return array of per-IP arrays of Destination and Gateway
 	 */
 	public String[][] hna() {
@@ -146,6 +155,7 @@ public class TxtInfo {
 
 	/**
 	 * Multiple Interface Declaration
+	 * 
 	 * @return array of per-IP arrays of IP address and Aliases
 	 */
 	public String[][] mid() {
@@ -154,7 +164,9 @@ public class TxtInfo {
 
 	/**
 	 * topology of the whole mesh
-	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ, and Cost
+	 * 
+	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ,
+	 *         and Cost
 	 */
 	public String[][] topology() {
 		return command("/top");
@@ -162,7 +174,9 @@ public class TxtInfo {
 
 	/**
 	 * the network interfaces that olsrd is aware of
-	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ, and Cost
+	 * 
+	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ,
+	 *         and Cost
 	 */
 	public String[][] interfaces() {
 		return command("/int");
@@ -170,7 +184,9 @@ public class TxtInfo {
 
 	/**
 	 * the gateways to other networks that this node knows about
-	 * @return array of per-IP arrays of Status, Gateway IP, ETX, Hopcount, Uplink, Downlink, IPv4, IPv6, Prefix
+	 * 
+	 * @return array of per-IP arrays of Status, Gateway IP, ETX, Hopcount,
+	 *         Uplink, Downlink, IPv4, IPv6, Prefix
 	 */
 	public String[][] gateways() {
 		return command("/gat");
@@ -182,50 +198,50 @@ public class TxtInfo {
 	public static void main(String[] args) throws IOException {
 		TxtInfo txtinfo = new TxtInfo();
 		System.out.println("NEIGHBORS----------");
-		for(String[] s : txtinfo.neighbors()) {
-			for(String t : s)
+		for (String[] s : txtinfo.neighbors()) {
+			for (String t : s)
 				System.out.print(t + ",");
 			System.out.println();
 		}
 		System.out.println("LINKS----------");
-		for(String[] s : txtinfo.links()) {
-			for(String t : s)
+		for (String[] s : txtinfo.links()) {
+			for (String t : s)
 				System.out.print(t + ",");
 			System.out.println();
 		}
 		System.out.println("ROUTES----------");
-		for(String[] s : txtinfo.routes()) {
-			for(String t : s)
+		for (String[] s : txtinfo.routes()) {
+			for (String t : s)
 				System.out.print(t + ",");
 			System.out.println();
 		}
 		System.out.println("HNA----------");
-		for(String[] s : txtinfo.hna()) {
-			for(String t : s)
+		for (String[] s : txtinfo.hna()) {
+			for (String t : s)
 				System.out.print(t + ",");
 			System.out.println();
 		}
 		System.out.println("MID----------");
-		for(String[] s : txtinfo.mid()) {
-			for(String t : s)
+		for (String[] s : txtinfo.mid()) {
+			for (String t : s)
 				System.out.print(t + ",");
 			System.out.println();
 		}
 		System.out.println("TOPOLOGY----------");
-		for(String[] s : txtinfo.topology()) {
-			for(String t : s)
+		for (String[] s : txtinfo.topology()) {
+			for (String t : s)
 				System.out.print(t + ",");
 			System.out.println();
 		}
 		System.out.println("INTERFACES----------");
-		for(String[] s : txtinfo.interfaces()) {
-			for(String t : s)
+		for (String[] s : txtinfo.interfaces()) {
+			for (String t : s)
 				System.out.print(t + ",");
 			System.out.println();
 		}
 		System.out.println("GATEWAYS----------");
-		for(String[] s : txtinfo.gateways()) {
-			for(String t : s)
+		for (String[] s : txtinfo.gateways()) {
+			for (String t : s)
 				System.out.print(t + ",");
 			System.out.println();
 		}
