@@ -10,6 +10,7 @@ public class Interface {
 	public String broadcast;
 	public String ipv6Address;
 	public String multicast;
+	public String kernelModule;
 	public int addressLength;
 	public int carrier;
 	public int dormant;
