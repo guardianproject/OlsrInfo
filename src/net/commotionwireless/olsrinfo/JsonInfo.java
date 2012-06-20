@@ -9,10 +9,12 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import net.commotionwireless.olsrinfo.datatypes.Config;
 import net.commotionwireless.olsrinfo.datatypes.Gateway;
 import net.commotionwireless.olsrinfo.datatypes.HNA;
 import net.commotionwireless.olsrinfo.datatypes.Interface;
@@ -49,7 +51,7 @@ public class JsonInfo {
 		port = setport;
 	}
 
-	public String[] request(String req) throws IOException {
+	String[] request(String req) throws IOException {
 		Socket sock = null;
 		BufferedReader in = null;
 		PrintWriter out = null;
@@ -79,7 +81,7 @@ public class JsonInfo {
 		return retlist.toArray(new String[retlist.size()]);
 	}
 
-	public String command(String cmd) {
+	String command(String cmd) {
 		String[] data = null;
 		String ret = "";
 
@@ -124,108 +126,11 @@ public class JsonInfo {
 		return ret;
 	}
 
-	/**
-	 * all of the runtime and startup status information in a single report
-	 * 
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
-	 *         Willingness, and 2 Hop Neighbors
-	 */
-	public String all() {
-		return command("/all");
-	}
-
-	/**
-	 * all of the runtime status information in a single report
-	 * 
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
-	 *         Willingness, and 2 Hop Neighbors
-	 */
-	public String runtime() {
-		return command("/runtime");
-	}
-
-	/**
-	 * all of the startup config information in a single report
-	 * 
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
-	 *         Willingness, and 2 Hop Neighbors
-	 */
-	public String startup() {
-		return command("/startup");
-	}
-
-	/**
-	 * immediate neighbors on the mesh
-	 * 
-	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
-	 *         Willingness, and 2 Hop Neighbors
-	 */
-	public String neighbors() {
-		return command("/neighbors");
-	}
-
-	/**
-	 * direct connections on the mesh, i.e. nodes with direct IP connectivity
-	 * via Ad-hoc
-	 * 
-	 * @return array of per-IP arrays of Local IP, Remote IP, Hysteresis, LQ,
-	 *         NLQ, and Cost
-	 */
-	public String links() {
-		return command("/links");
-	}
-
-	/**
-	 * IP routes to nodes on the mesh
-	 * 
-	 * @return array of per-IP arrays of Destination, Gateway IP, Metric, ETX,
-	 *         and Interface
-	 */
-	public String routes() {
-		return command("/routes");
-	}
-
-	/**
-	 * Host and Network Association (for supporting dynamic internet gateways)
-	 * 
-	 * @return array of per-IP arrays of Destination and Gateway
-	 */
-	public String hna() {
-		return command("/hna");
-	}
-
-	/**
-	 * Multiple Interface Declaration
-	 * 
-	 * @return array of per-IP arrays of IP address and Aliases
-	 */
-	public String mid() {
-		return command("/mid");
-	}
-
-	/**
-	 * topology of the whole mesh
-	 * 
-	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ,
-	 *         and Cost
-	 */
-	public String topology() {
-		return command("/topology");
-	}
-
-	/**
-	 * the network interfaces that olsrd is aware of
-	 * 
-	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ,
-	 *         and Cost
-	 */
-	public Collection<Interface> interfaces() {
-		String data = command("/interfaces");
-		// System.out.println(data);
+	OlsrDataDump parseCommand(String cmd) {
 		ObjectMapper mapper = new ObjectMapper();
+		OlsrDataDump ret = new OlsrDataDump();
 		try {
-			OlsrDataDump dump = mapper.readValue(data, OlsrDataDump.class);
-			return dump.interfaces;
+			ret = mapper.readValue(command(cmd), OlsrDataDump.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -236,7 +141,128 @@ public class JsonInfo {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return null;
+
+		// change nulls to blank objects so you can use this result in a for()
+		if (ret.config == null)
+			ret.config = new Config();
+		if (ret.gateways == null)
+			ret.gateways = Collections.emptyList();
+		if (ret.hna == null)
+			ret.hna = Collections.emptyList();
+		if (ret.interfaces == null)
+			ret.interfaces = Collections.emptyList();
+		if (ret.links == null)
+			ret.links = Collections.emptyList();
+		if (ret.mid == null)
+			ret.mid = Collections.emptyList();
+		if (ret.neighbors == null)
+			ret.neighbors = Collections.emptyList();
+		if (ret.topology == null)
+			ret.topology = Collections.emptyList();
+		if (ret.plugins == null)
+			ret.plugins = Collections.emptyList();
+		if (ret.routes == null)
+			ret.routes = Collections.emptyList();
+		return ret;
+	}
+
+	/**
+	 * all of the runtime and startup status information in a single report
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
+	 */
+	public OlsrDataDump all() {
+		return parseCommand("/all");
+	}
+
+	/**
+	 * all of the runtime status information in a single report
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
+	 */
+	public OlsrDataDump runtime() {
+		return parseCommand("/interfaces");
+	}
+
+	/**
+	 * all of the startup config information in a single report
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
+	 */
+	public OlsrDataDump startup() {
+		return parseCommand("/interfaces");
+	}
+
+	/**
+	 * immediate neighbors on the mesh
+	 * 
+	 * @return array of per-IP arrays of IP address, SYM, MPR, MPRS,
+	 *         Willingness, and 2 Hop Neighbors
+	 */
+	public Collection<Neighbor> neighbors() {
+		return parseCommand("/neighbors").neighbors;
+	}
+
+	/**
+	 * direct connections on the mesh, i.e. nodes with direct IP connectivity
+	 * via Ad-hoc
+	 * 
+	 * @return array of per-IP arrays of Local IP, Remote IP, Hysteresis, LQ,
+	 *         NLQ, and Cost
+	 */
+	public Collection<Link> links() {
+		return parseCommand("/links").links;
+	}
+
+	/**
+	 * IP routes to nodes on the mesh
+	 * 
+	 * @return array of per-IP arrays of Destination, Gateway IP, Metric, ETX,
+	 *         and Interface
+	 */
+	public Collection<Route> routes() {
+		return parseCommand("/routes").routes;
+	}
+
+	/**
+	 * Host and Network Association (for supporting dynamic internet gateways)
+	 * 
+	 * @return array of per-IP arrays of Destination and Gateway
+	 */
+	public Collection<HNA> hna() {
+		return parseCommand("/hna").hna;
+	}
+
+	/**
+	 * Multiple Interface Declaration
+	 * 
+	 * @return array of per-IP arrays of IP address and Aliases
+	 */
+	public Collection<MID> mid() {
+		return parseCommand("/mid").mid;
+	}
+
+	/**
+	 * topology of the whole mesh
+	 * 
+	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ,
+	 *         and Cost
+	 */
+	public Collection<Node> topology() {
+		return parseCommand("/topology").topology;
+	}
+
+	/**
+	 * the network interfaces that olsrd is aware of
+	 * 
+	 * @return array of per-IP arrays of Destination IP, Last hop IP, LQ, NLQ,
+	 *         and Cost
+	 */
+	public Collection<Interface> interfaces() {
+		return parseCommand("/interfaces").interfaces;
 	}
 
 	/**
@@ -245,22 +271,22 @@ public class JsonInfo {
 	 * @return array of per-IP arrays of Status, Gateway IP, ETX, Hopcount,
 	 *         Uplink, Downlink, IPv4, IPv6, Prefix
 	 */
-	public String gateways() {
-		return command("/gateways");
+	public Collection<Gateway> gateways() {
+		return parseCommand("/gateways").gateways;
 	}
 
 	/**
 	 * The parsed configuration of olsrd in its current state
 	 */
-	public String config() {
-		return command("/config");
+	public Config config() {
+		return parseCommand("/config").config;
 	}
 
 	/**
 	 * The parsed configuration of plugins in their current state
 	 */
-	public String plugins() {
-		return command("/plugins");
+	public Collection<Plugin> plugins() {
+		return parseCommand("/plugins").plugins;
 	}
 
 	/**
@@ -275,8 +301,7 @@ public class JsonInfo {
 	 */
 	public static void main(String[] args) throws IOException {
 		JsonInfo jsoninfo = new JsonInfo();
-		ObjectMapper mapper = new ObjectMapper();
-		OlsrDataDump dump = mapper.readValue(jsoninfo.all(), OlsrDataDump.class);
+		OlsrDataDump dump = jsoninfo.all();
 		System.out.println("gateways:");
 		for (Gateway g : dump.gateways)
 			System.out.println("\t" + g.ipAddress);
