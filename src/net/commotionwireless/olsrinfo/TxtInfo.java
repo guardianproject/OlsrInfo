@@ -1,4 +1,6 @@
+
 package net.commotionwireless.olsrinfo;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,8 +15,12 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author Hans-Christoph Steiner
+ * Scrape the output of <tt>olsrd</tt>'s txtinfo plugin into
+ * arrays of Strings.
+ * Written as part of the Commotion Wireless project
  * 
+ * @author Hans-Christoph Steiner <hans@eds.org>
+ * @see <a href="https://code.commotionwireless.net/projects/commotion/wiki/OLSR_Configuration_and_Management">OLSR Configuration and Management</a>
  */
 public class TxtInfo {
 

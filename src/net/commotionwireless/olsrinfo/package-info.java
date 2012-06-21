@@ -1,16 +1,11 @@
-package net.commotionwireless.olsrinfo.datatypes;
-
-import java.util.Collection;
-
 /**
- * A network interface used in MID (Multiple Interface Declaration) setups.
+ * Provides the classes for parsing the output of various <tt>olsrd</tt> plugins.
+ * These classes are named after the plugins they are meant to work with.
  * 
  * Written as part of the Commotion Wireless project
  * 
  * @author Hans-Christoph Steiner <hans@eds.org>
  * @see <a href="https://code.commotionwireless.net/projects/commotion/wiki/OLSR_Configuration_and_Management">OLSR Configuration and Management</a>
  */
-public class MID {
-	public String ipAddress;
-	public Collection<MIDAlias> aliases;
-}
+package net.commotionwireless.olsrinfo;
+

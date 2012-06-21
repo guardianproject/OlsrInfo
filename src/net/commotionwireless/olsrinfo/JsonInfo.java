@@ -31,8 +31,13 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
- * @author Hans-Christoph Steiner
+ * Parse the output of <tt>olsrd</tt>'s jsoninfo plugin, using the
+ * Jackson JSON library to parse the data into Java objects. 
  * 
+ * Written as part of the Commotion Wireless project
+ * 
+ * @author Hans-Christoph Steiner <hans@eds.org>
+ * @see <a href="https://code.commotionwireless.net/projects/commotion/wiki/OLSR_Configuration_and_Management">OLSR Configuration and Management</a>
  */
 public class JsonInfo {
 
@@ -51,6 +56,13 @@ public class JsonInfo {
 		port = setport;
 	}
 
+	/**
+	 * Request a reply from the jsoninfo plugin via a network socket.
+	 * 
+	 * @param The command to query jsoninfo with
+	 * @return A String array of the result, line-by-line
+	 * @throws IOException when it cannot get a result.
+	 */
 	String[] request(String req) throws IOException {
 		Socket sock = null;
 		BufferedReader in = null;
@@ -81,6 +93,12 @@ public class JsonInfo {
 		return retlist.toArray(new String[retlist.size()]);
 	}
 
+	/**
+	 * Send a command to the jsoninfo plugin.
+	 * 
+	 * @param The command to query jsoninfo with
+	 * @return The complete JSON from jsoninfo as single String
+	 */
 	String command(String cmd) {
 		String[] data = null;
 		String ret = "";
@@ -126,6 +144,13 @@ public class JsonInfo {
 		return ret;
 	}
 
+	/**
+	 * Query the jsoninfo plugin over a network socket and return the results 
+	 * parsed into Java objects.
+	 * 
+	 * @param The command to query jsoninfo with
+	 * @return The complete JSON reply parsed into Java objects.
+	 */
 	OlsrDataDump parseCommand(String cmd) {
 		ObjectMapper mapper = new ObjectMapper();
 		OlsrDataDump ret = new OlsrDataDump();

@@ -2,6 +2,15 @@ package net.commotionwireless.olsrinfo.datatypes;
 
 import java.util.Collection;
 
+/**
+ * A class representing the complete dump of information from <tt>olsrd</tt>'s
+ * jsoninfo plugin.
+ * 
+ * Written as part of the Commotion Wireless project
+ * 
+ * @author Hans-Christoph Steiner <hans@eds.org>
+ * @see <a href="https://code.commotionwireless.net/projects/commotion/wiki/OLSR_Configuration_and_Management">OLSR Configuration and Management</a>
+ */
 public class OlsrDataDump {
 	public Config config;
 	public Collection<Gateway> gateways;

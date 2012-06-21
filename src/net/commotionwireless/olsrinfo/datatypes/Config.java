@@ -2,6 +2,14 @@ package net.commotionwireless.olsrinfo.datatypes;
 
 import java.util.Collection;
 
+/**
+ * The complete startup configuration of <tt>olsrd</tt>
+ * 
+ * Written as part of the Commotion Wireless project
+ * 
+ * @author Hans-Christoph Steiner <hans@eds.org>
+ * @see <a href="https://code.commotionwireless.net/projects/commotion/wiki/OLSR_Configuration_and_Management">OLSR Configuration and Management</a>
+ */
 public class Config {
     public int olsrPort;
     public int debugLevel;
