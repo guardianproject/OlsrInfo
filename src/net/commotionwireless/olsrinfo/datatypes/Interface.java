@@ -23,6 +23,7 @@ public class Interface {
 	public int addressLength;
 	public int carrier;
 	public int dormant;
+	public String features;
 	public String flags;
 	public int linkMode;
 	public String macAddress;
