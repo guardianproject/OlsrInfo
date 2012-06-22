@@ -74,10 +74,12 @@ public class JsonInfo {
 			in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
 			out = new PrintWriter(sock.getOutputStream(), true);
 		} catch (UnknownHostException e) {
-			throw new IOException();
+			System.err.println("Unknown host: " + host);
+			return new String[0];
 		} catch (IOException e) {
 			System.err.println("Couldn't get I/O for socket to " + host + ":"
 					+ Integer.toString(port));
+			return new String[0];
 		}
 		out.println(req);
 		String line;
@@ -155,7 +157,9 @@ public class JsonInfo {
 		ObjectMapper mapper = new ObjectMapper();
 		OlsrDataDump ret = new OlsrDataDump();
 		try {
-			ret = mapper.readValue(command(cmd), OlsrDataDump.class);
+			String dump = command(cmd);
+			if (! dump.contentEquals(""))
+				ret = mapper.readValue(dump, OlsrDataDump.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
