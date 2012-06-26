@@ -158,6 +158,7 @@ public class JsonInfo {
 		OlsrDataDump ret = new OlsrDataDump();
 		try {
 			String dump = command(cmd);
+			ret.setRaw(dump);
 			if (! dump.contentEquals(""))
 				ret = mapper.readValue(dump, OlsrDataDump.class);
 		} catch (JsonParseException e) {

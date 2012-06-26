@@ -24,4 +24,14 @@ public class OlsrDataDump {
 	public Collection<Route> routes;
 	public int systemTime;
 	public String uuid;
+
+	String raw;
+
+	public void setRaw(String s) {
+		raw = s;
+	}
+	
+	public String toString(){
+		return raw;
+	}
 }
