@@ -53,4 +53,14 @@ public class Interface {
 	public int txHeartbeatErrors;
 	public int txPackets;
 	public int txWindowErrors;
+	public int beaconing;
+	public int encryptionKey;
+	public int fragmentationThreshold;
+	public int signalLevel;
+	public int linkQuality;
+	public int misc;
+	public int noiseLevel;
+	public int nwid;
+	public int wirelessRetries;
+	public String wirelessStatus;
 }
