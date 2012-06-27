@@ -1,16 +1,34 @@
 package net.commotionwireless.olsrinfo.datatypes;
 
+import java.util.Collection;
+
 /**
- * A network interface from the list of interfaces that <tt>olsrd</tt>
- * is aware of at runtime.
+ * A network interface from the list of interfaces that <tt>olsrd</tt> is aware
+ * of at runtime.
  * 
  * Written as part of the Commotion Wireless project
  * 
  * @author Hans-Christoph Steiner <hans@eds.org>
- * @see <a href="https://code.commotionwireless.net/projects/commotion/wiki/OLSR_Configuration_and_Management">OLSR Configuration and Management</a>
+ * @see <a
+ *      href="https://code.commotionwireless.net/projects/commotion/wiki/OLSR_Configuration_and_Management">OLSR
+ *      Configuration and Management</a>
  */
 public class Interface {
 	public String name;
+	public String nameFromKernel;
+	public int interfaceMode;
+	public boolean emulatedHostClientInterface;
+	public boolean sendTcImmediately;
+	public int fishEyeTtlIndex;
+	public int olsrForwardingTimeout;
+	public int olsrMessageSequenceNumber;
+	public Collection<LinkQualityMultiplier> linkQualityMultipliers;
+	public int olsrInterfaceMetric;
+	public int helloEmissionInterval;
+	public int helloValidityTime;
+	public int tcValidityTime;
+	public int midValidityTime;
+	public int hnaValidityTime;
 	public String state;
 	public int olsrMTU;
 	public boolean wireless;
@@ -19,6 +37,8 @@ public class Interface {
 	public String broadcast;
 	public String ipv6Address;
 	public String multicast;
+	public boolean icmpRedirect;
+	public boolean spoofFilter;
 	public String kernelModule;
 	public int addressLength;
 	public int carrier;
