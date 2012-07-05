@@ -23,6 +23,7 @@ public class OlsrDataDump {
 	public Collection<Plugin> plugins;
 	public Collection<Route> routes;
 	public int systemTime;
+	public int timeSinceStartup;
 	public String uuid;
 
 	String raw;
