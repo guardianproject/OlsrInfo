@@ -46,6 +46,7 @@ public class Config {
 	public float defaultHnaValidityTime;
 	public boolean defaultAutoDetectChanges;
 	public Collection<LinkQualityMultiplier> defaultLinkQualityMultipliers;
+	public Collection<HNA> hna;
 	public int ipcConnections;
 	public int totalIpcConnectionsAllowed;
 	public Collection<AddressNetmask> ipcAllowedAddresses;
