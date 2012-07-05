@@ -9,10 +9,10 @@ package net.commotionwireless.olsrinfo.datatypes;
  * @see <a href="https://code.commotionwireless.net/projects/commotion/wiki/OLSR_Configuration_and_Management">OLSR Configuration and Management</a>
  */
 public class Route {
-	public String localIP;
-	public String remoteIP;
-	public int validityTime;
-	public float linkQuality;
-	public float neighborLinkQuality;
-	public int linkCost;
+	public String destination;
+	public int genmask;
+	public String gateway;
+	public int metric;
+	public int rtpMetricCost;
+	public String networkInterface;
 }

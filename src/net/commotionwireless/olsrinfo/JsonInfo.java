@@ -160,6 +160,7 @@ public class JsonInfo {
 			String dump = command(cmd);
 			ret.setRaw(dump);
 			if (! dump.contentEquals(""))
+				// TODO filter routes/"interface" into java-kosher name http://wiki.fasterxml.com/JacksonFeatureJsonFilter
 				ret = mapper.readValue(dump, OlsrDataDump.class);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
@@ -355,7 +356,7 @@ public class JsonInfo {
 			System.out.println("\t" + p.plugin);
 		System.out.println("Routes:");
 		for (Route r : dump.routes)
-			System.out.println("\t" + r.localIP);
+			System.out.println("\t" + r.destination);
 		System.out.println("Topology:");
 		for (Node node : dump.topology)
 			System.out.println("\t" + node.destinationIP);
