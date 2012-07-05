@@ -158,10 +158,10 @@ public class JsonInfo {
 		OlsrDataDump ret = new OlsrDataDump();
 		try {
 			String dump = command(cmd);
-			ret.setRaw(dump);
 			if (! dump.contentEquals(""))
 				// TODO filter routes/"interface" into java-kosher name http://wiki.fasterxml.com/JacksonFeatureJsonFilter
 				ret = mapper.readValue(dump, OlsrDataDump.class);
+			ret.setRaw(dump);
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
