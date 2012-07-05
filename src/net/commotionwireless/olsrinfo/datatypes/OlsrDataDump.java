@@ -22,11 +22,11 @@ public class OlsrDataDump {
 	public Collection<Node> topology;
 	public Collection<Plugin> plugins;
 	public Collection<Route> routes;
-	public int systemTime;
-	public int timeSinceStartup;
-	public String uuid;
+	public int systemTime = 0;
+	public int timeSinceStartup = 0;
+	public String uuid = "";
 
-	String raw;
+	String raw = "";
 
 	public void setRaw(String s) {
 		raw = s;
