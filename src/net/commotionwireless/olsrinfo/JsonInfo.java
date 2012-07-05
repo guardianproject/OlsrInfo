@@ -71,7 +71,7 @@ public class JsonInfo {
 
 		try {
 			sock = new Socket(host, port);
-			in = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+			in = new BufferedReader(new InputStreamReader(sock.getInputStream()), 8192);
 			out = new PrintWriter(sock.getOutputStream(), true);
 		} catch (UnknownHostException e) {
 			System.err.println("Unknown host: " + host);
