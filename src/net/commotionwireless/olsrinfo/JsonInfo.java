@@ -153,7 +153,7 @@ public class JsonInfo {
 	 * @param The command to query jsoninfo with
 	 * @return The complete JSON reply parsed into Java objects.
 	 */
-	OlsrDataDump parseCommand(String cmd) {
+	public OlsrDataDump parseCommand(String cmd) {
 		ObjectMapper mapper = new ObjectMapper();
 		OlsrDataDump ret = new OlsrDataDump();
 		try {
