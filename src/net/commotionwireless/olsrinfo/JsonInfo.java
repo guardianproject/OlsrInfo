@@ -41,10 +41,35 @@ import org.codehaus.jackson.map.ObjectMapper;
  */
 public class JsonInfo {
 
+	private String lastCommand = "";
+
 	String host = "127.0.0.1";
 	int port = 9090;
 
 	ObjectMapper mapper = null;
+
+	final Set<String> supportedCommands = new HashSet<String>(
+			Arrays.asList(new String[] {
+					// combined reports
+					"all", // all of the JSON info
+					"runtime", // all of the runtime status reports
+					"startup", // all of the startup config reports
+					// individual runtime reports
+					"gateways", // gateways
+					"hna", // Host and Network Association
+					"interfaces", // network interfaces
+					"links", // links
+					"mid", // MID
+					"neighbors", // neighbors
+					"routes", // routes
+					"topology", // mesh network topology
+					"runtime", // all the runtime info in a single report
+					// the rest don't change at runtime, so they're separate
+					"config", // the current running config info
+					"plugins", // loaded plugins and their config
+					// only non-JSON output, can't be combined with others
+					"olsrd.conf", // current config in olsrd.conf format
+			}));
 
 	public JsonInfo() {
 	}
@@ -58,6 +83,20 @@ public class JsonInfo {
 		port = setport;
 	}
 
+	private boolean isCommandStringValid(String cmdString) {
+		boolean isValid = true;
+		if (!cmdString.equals(lastCommand)) {
+			lastCommand = cmdString;
+			for (String s : cmdString.split("/")) {
+				if ( !s.equals("") && !supportedCommands.contains(s)) {
+					System.out.println("Unsupported command: " + s);
+					isValid = false;
+				}
+			}
+		}
+		return isValid;
+	}
+	
 	/**
 	 * Request a reply from the jsoninfo plugin via a network socket.
 	 * 
@@ -98,46 +137,18 @@ public class JsonInfo {
 	}
 
 	/**
-	 * Send a command to the jsoninfo plugin.
+	 * Send a command to the jsoninfo plugin and get the raw dump back.
 	 * 
 	 * @param The command to query jsoninfo with
 	 * @return The complete JSON from jsoninfo as single String
 	 */
-	String command(String cmd) {
+	public String command(String cmdString) {
 		String[] data = null;
 		String ret = "";
 
-		final Set<String> supportedCommands = new HashSet<String>(
-				Arrays.asList(new String[] {
-						// combined reports
-						"/all", // all of the JSON info
-						"/runtime", // all of the runtime status reports
-						"/startup", // all of the startup config reports
-						// individual runtime reports
-						"/gateways", // gateways
-						"/hna", // Host and Network Association
-						"/interfaces", // network interfaces
-						"/links", // links
-						"/mid", // MID
-						"/neighbors", // neighbors
-						"/routes", // routes
-						"/topology", // mesh network topology
-						"/runtime", // all of the runtime info in a single
-									// report
-						// the following don't change during runtime, so they
-						// are separate
-						"/config", // the current running config info
-						"/plugins", // loaded plugins and their config
-						// the only non-JSON output, and can't be combined with
-						// the others
-						"/olsrd.conf", // current config info in olsrd.conf file
-										// format
-				}));
-		if (!supportedCommands.contains(cmd))
-			System.out.println("Unsupported command: " + cmd);
-
+		isCommandStringValid(cmdString);
 		try {
-			data = request(cmd);
+			data = request(cmdString);
 		} catch (IOException e) {
 			System.err.println("Couldn't get I/O for socket to " + host + ":"
 					+ Integer.toString(port));
