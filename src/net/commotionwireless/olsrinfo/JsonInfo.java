@@ -44,6 +44,8 @@ public class JsonInfo {
 	String host = "127.0.0.1";
 	int port = 9090;
 
+	ObjectMapper mapper = null;
+
 	public JsonInfo() {
 	}
 
@@ -154,12 +156,12 @@ public class JsonInfo {
 	 * @return The complete JSON reply parsed into Java objects.
 	 */
 	public OlsrDataDump parseCommand(String cmd) {
-		ObjectMapper mapper = new ObjectMapper();
+		if (mapper == null)
+			mapper = new ObjectMapper();
 		OlsrDataDump ret = new OlsrDataDump();
 		try {
 			String dump = command(cmd);
 			if (! dump.contentEquals(""))
-				// TODO filter routes/"interface" into java-kosher name http://wiki.fasterxml.com/JacksonFeatureJsonFilter
 				ret = mapper.readValue(dump, OlsrDataDump.class);
 			ret.setRaw(dump);
 		} catch (JsonParseException e) {
