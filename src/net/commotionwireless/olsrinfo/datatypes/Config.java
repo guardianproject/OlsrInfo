@@ -30,8 +30,8 @@ public class Config {
 	public int rtTableDefaultPriority;
 	public int willingness;
 	public boolean willingnessAuto;
-	public int brokenLinkCost;
-	public int brokenRouteCost;
+	public long brokenLinkCost;
+	public long brokenRouteCost;
 	public String fibMetrics;
 	public String defaultIpv6Multicast;
 	public String defaultIpv4Broadcast;
