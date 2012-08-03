@@ -143,14 +143,14 @@ public class JsonInfo {
 	 * @return The complete JSON from jsoninfo as single String
 	 */
 	public String command(String cmdString) {
-		String[] data = null;
+		String[] data = new String[0];
 		String ret = "";
 
 		isCommandStringValid(cmdString);
 		try {
 			data = request(cmdString);
 		} catch (IOException e) {
-			System.err.println("Couldn't get I/O for socket to " + host + ":"
+			System.err.println("Failed to read data from " + host + ":"
 					+ Integer.toString(port));
 		}
 		for (String s : data) {
