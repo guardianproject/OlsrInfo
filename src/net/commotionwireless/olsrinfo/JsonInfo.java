@@ -175,6 +175,12 @@ public class JsonInfo {
 			if (! dump.contentEquals(""))
 				ret = mapper.readValue(dump, OlsrDataDump.class);
 			ret.setRaw(dump);
+			/*
+			// TODO Jackson is happier if it can download the stuff itself
+			// http://wiki.fasterxml.com/JacksonBestPracticesPerformance
+			URL url = new URL("http", host, port, cmd);
+			ret = mapper.readValue(url, OlsrDataDump.class);
+			*/
 		} catch (JsonParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
