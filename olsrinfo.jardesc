@@ -12,6 +12,7 @@
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
         <file path="/OlsrInfo/README.txt"/>
+        <file path="/OlsrInfo/LICENSE.txt"/>
         <javaElement handleIdentifier="=OlsrInfo/src"/>
     </selectedElements>
 </jardesc>
